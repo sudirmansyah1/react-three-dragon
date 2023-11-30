@@ -1,13 +1,19 @@
-import { Suspense, useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
+import { Suspense, useState, useEffect } from 'react'
 import { Canvas } from "@react-three/fiber";
-import { Loading } from './components'
+import { Loading, MusicPlay } from './components'
 import { IslandModels, DragonModels } from "./models"
 import "./App.css"
 
 function App() {
+  const [loadingDone, setLoadingDone] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoadingDone(true);
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <section className="w-screen h-screen bg-sky-100	">
                 <Canvas
@@ -41,6 +47,7 @@ function App() {
                         />
                     </Suspense>
                 </Canvas>
+                {loadingDone && <MusicPlay />}
         </section>
   )
 }
