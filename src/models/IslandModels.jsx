@@ -6,7 +6,7 @@ Source: https://sketchfab.com/3d-models/issum-the-town-on-capital-isle-e433923a6
 Title: Issum, The town on Capital Isle
 */
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Html, useGLTF } from "@react-three/drei";
 import { useDrag } from 'react-use-gesture';
 import { useFrame } from '@react-three/fiber';
@@ -17,10 +17,25 @@ export function IslandModels(props) {
   const { nodes, materials } = useGLTF(Island3D);
   const islandRef = useRef();
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Function to handle mouse drag
   const bind = useDrag(({ offset: [x, y], down }) => {
-    islandRef.current.rotation.y = x / 300;
-    setIsAlreadyRotate(true); // Set flag to indicate rotation due to dragging
+    if (!isMobile) {
+      islandRef.current.rotation.y = x / 300;
+      setIsAlreadyRotate(true); // Set flag to indicate rotation due to dragging
+    }
   });
 
   // Continuous rotation
